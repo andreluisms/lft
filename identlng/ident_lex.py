@@ -16,17 +16,17 @@ states = (('idstate', 'exclusive'),
 t_LINHA = '[a-zA-Z][a-zA-Z \t]+'
 
 def t_breakline(t):
-    r'\n+'                 #reconhece uma ou mais quebras de linha
+    r'\n+'                                 #recognizes one or more break lines
     t.lexer.lineno += len(t.value) 
     t.lexer.begin('idstate')
 
 def t_idstate_blankline(t):
-    r'([ \t]+)\n'         #reconhece uma linha em branco
+    r'([ \t]+)\n'                           #recognizes a blank line
     # print('t_idstate_blankline')
     pass
 
 def t_idstate_linewithcode(t):
-    '([ \t]+) | ([a-zA-Z])'               #reconhece brancos e tabulacoes ou uma letra
+    '([ \t]+) | ([a-zA-Z])'                 #recognizes white spaces and tabs or a letter
     # print('t_idstate_linewithcode')
     n_spaces = space_counter(t)
     t.lexer.begin('INITIAL')
@@ -44,7 +44,7 @@ def t_idstate_linewithcode(t):
         t.lexer.skip(-1)
 
 def t_dedstate_linewithdedent(t):
-    '([ \t]+) | ([a-zA-Z])'       #reconhece brancos e tabulacoes ou uma letra
+    '([ \t]+) | ([a-zA-Z])'                 #recognizes white spaces and tabs or a letter
     n_spaces = space_counter(t)
     if n_spaces < stack[-1]:
         t.lexer.skip(-len(t.value))
@@ -55,20 +55,20 @@ def t_dedstate_linewithdedent(t):
         t.lexer.begin('INITIAL')
         if n_spaces > stack[-1]:
             print('Erro de dedentação --->', n_spaces)
-        elif n_spaces == 0:    # Caso elemento reconhecido comece por letra
+        elif n_spaces == 0:                  # If the element starts with a letter
             t.lexer.skip(-1)
 
 def t_error(t):
-    print("Erro no estado INITIAL")
+    print("ERROR in INITIAL state")
     print(t.value)
     t.lexer.skip(1)
 
 def t_idstate_error(t):
-    print("Erro no estado idstate")
+    print("ERROR in idstate state")
     t.lexer.skip(1)
 
 def t_dedstate_error(t):
-    print("Erro no estado dedstate")
+    print("ERROR in dedstate state")
     t.lexer.skip(1)
 
 
